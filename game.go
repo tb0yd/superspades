@@ -29,6 +29,7 @@ const (
     cardInBook
 )
 
+// Initialize new game, equivalent to Game{}.
 func NewGame() Game {
     return Game{}
 }

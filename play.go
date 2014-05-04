@@ -5,14 +5,17 @@ import (
    // "fmt"
 )
 
-const MsgNotHeld = "Card not held by player."
+const msgNotHeld = "Card not held by player."
 
+// Play a card. It is assumed that the one playing the card
+// is the current player. If the current player doesn't hold
+// the card passed, an error is thrown.
 func (g Game) Play(card Card) (Game, error) {
     // zero-index
     zxCurrentPlayer := g.CurrentPlayer - 1
 
     if zxCurrentPlayer != g.cardPositions[card.Order()] - cardInHand1 {
-        return g, errors.New(MsgNotHeld)
+        return g, errors.New(msgNotHeld)
     }
 
     // play on table in slot for player

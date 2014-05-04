@@ -5,8 +5,7 @@ import (
     "math/rand"
 )
 
-// Deal cards to all 4 players evenly. Must be called before the game
-// can begin.
+// Deal cards to all 4 players evenly.
 func (g Game) Deal() Game {
     rand.Seed(time.Now().UTC().UnixNano())
 
