@@ -2,6 +2,8 @@ package superspades
 
 import "testing"
 
-func TestGame(t *testing.T) {
-
+func TestNewGame(t *testing.T) {
+    if NewGame() != (Game{}) {
+        t.Errorf("NewGame() != Game{}")
+    }
 }
