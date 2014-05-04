@@ -16,6 +16,7 @@ type Card interface {
     Beats(Card) bool
     IsSpades() bool
     Order() uint8
+    InOrder(uint8) Card
 
     // private methods to implement the above
     suit() uint8
@@ -63,3 +64,8 @@ func (card card) IsSpades() bool {
 func (card card) Order() uint8 {
     return (card.suit() * 13) + card.value()
 }
+
+func (c card) InOrder(order uint8) Card {
+    return card{deck.Card(uint8((order / 13) << 4) | ((order + 1) % 13))}
+}
+

@@ -22,7 +22,10 @@ const (
     cardInHand2
     cardInHand3
     cardInHand4
-    cardOnTable
+    cardOnTableForPlayer1
+    cardOnTableForPlayer2
+    cardOnTableForPlayer3
+    cardOnTableForPlayer4
     cardInBook
 )
 

@@ -1,7 +1,7 @@
 package superspades
 
 import (
-    //"fmt"
+   // "fmt"
     "github.com/jteeuwen/deck"
     "testing"
 )
@@ -19,11 +19,15 @@ func TestAceOfSpades(t *testing.T) {
         t.Errorf("wasn't spades")
     }
 
+    if (card{}).InOrder(c.Order()) != c {
+        t.Errorf("order didn't return c.")
+    }
+
     for i := 0; i < 4; i++ {
         for j := 0; j < 13; j++ {
             if i != 3 && j != 0 {
                 c2 := deck.NewCard(deck.Suit(i), uint8(j))
-                
+
                 if c.Order() == (card{c2}).Order() {
                     t.Errorf("order wasn't unique")
                 }
