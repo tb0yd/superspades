@@ -26,34 +26,6 @@ const (
     cardInBook
 )
 
-const (
-    GameNoBids = iota
-    GameNotDealt
-    GameNoCurrentPlayer
-    GameInPlay
-    GameFinished
-)
-
 func NewGame() Game {
     return Game{}
-}
-
-func (g Game) State() (int, string) {
-    if g.cardPositions == [52]uint8{} {
-        return GameNotDealt, MsgNotDealt
-    }
-
-    if g.Bids == [4]uint8{} {
-        return GameNoBids, MsgNoBids
-    }
-
-    if g.Books[0] + g.Books[1] + g.Books[2] + g.Books[3] >= 13 {
-        return GameFinished, MsgFinished
-    }
-
-    if g.CurrentPlayer == 0 {
-        panic(PanicMsgNoCurrentPlayer) // developer error -> panic
-    }
-
-    return GameInPlay, MsgInPlay
 }
