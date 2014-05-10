@@ -60,46 +60,6 @@ func (g Game) PlayableCards() []Card {
     return cardsArray[0:i]
 }
 
-func (g Game) spadesBroken() bool {
-    for i := 39; i < 52; i++ {
-        if g.cardPositions[i] > cardInHand4 {
-            return true
-        }
-    }
-
-    return false
-}
-
-func (g Game) leading() bool {
-    for i := 0; i < 52; i++ {
-        if g.cardPositions[i] >= cardOnTableForPlayer1 && g.cardPositions[i] <= cardOnTableForPlayer4 {
-            return false
-        }
-    }
-
-    return true
-}
-
-func (g Game) lastSuit() int {
-    var oxOnTable [4]int
-
-    for i := 0; i < 52; i++ {
-        if g.cardPositions[i] >= cardOnTableForPlayer1 && g.cardPositions[i] <= cardOnTableForPlayer4 {
-            oxOnTable[g.cardPositions[i] - cardOnTableForPlayer1] = i
-        }
-    }
-
-    for i,j := (g.CurrentPlayer+1) % 4,0; j < 4; i,j = (i+1) % 4, j + 1 {
-        zxPrevPlayer := (i+3) % 4
-
-        if oxOnTable[zxPrevPlayer] == 0 && oxOnTable[i] != 0 {
-            return (oxOnTable[i] - 1) / 13
-        }
-    }
-
-    return 4
-}
-
 func (g Game) collectBook() Game {
     var cards [4]Card
 
