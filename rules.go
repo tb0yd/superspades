@@ -3,8 +3,8 @@ package superspades
 //import "fmt"
 
 const (
-    INVALID_UNLESS_FORCED = iota
-    VALID
+    invalidUnlessForced = iota
+    valid
 )
 
 // Returns the winning move between four cards. leading is zero-index
@@ -39,24 +39,24 @@ func canPlayMove(card int, hand []int, spadesBroken bool, leading bool, lastSuit
         return true
     }
 
-    return moveType(card, hand, spadesBroken, leading, lastSuit) == VALID
+    return moveType(card, hand, spadesBroken, leading, lastSuit) == valid
 }
 
 func moveType(card int, hand []int, spadesBroken bool, leading bool, lastSuit int) int {
     if !leading && (card/13 != lastSuit) {
-        return INVALID_UNLESS_FORCED
+        return invalidUnlessForced
     }
 
     if !spadesBroken && (card/13 == 3) {
-        return INVALID_UNLESS_FORCED
+        return invalidUnlessForced
     }
 
-    return VALID
+    return valid
 }
 
 func forced(hand []int, spadesBroken bool, leading bool, lastSuit int) bool {
     for _, card := range hand {
-        if moveType(card, hand, spadesBroken, leading, lastSuit) == VALID {
+        if moveType(card, hand, spadesBroken, leading, lastSuit) == valid {
             return false
         }
     }
