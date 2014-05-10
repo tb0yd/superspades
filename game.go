@@ -1,5 +1,7 @@
 package superspades
 
+//import "fmt"
+
 // Struct which represents a game state. The zero value is a game
 // that has not been started yet. CurrentPlayer is the player's seat
 // number, either 1, 2, 3, 4, or 0 which represents that the game
@@ -33,3 +35,15 @@ const (
 func NewGame() Game {
     return Game{}
 }
+
+// Returns true if there are no more moves left.
+func (g Game) IsOver() bool {
+    for i:=0; i<52; i++ {
+        if g.cardPositions[i] != cardInBook {
+            return false
+        }
+    }
+
+    return true
+}
+

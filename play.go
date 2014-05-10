@@ -2,26 +2,27 @@ package superspades
 
 import (
     "errors"
-   // "fmt"
+    //"fmt"
 )
 
-const msgNotHeld = "Card not held by player."
-
-// Play a card. It is assumed that the one playing the card
-// is the current player. If the current player doesn't hold
-// the card passed, an error is thrown.
-func (g Game) Play(card Card) (Game, error) {
+// Play the card in the current player's hand indexed by cardNo.
+// If the current player doesn't hold
+// that many cards, an error is thrown.
+func (g Game) Play(cardNo int) (Game, error) {
     // zero-index
     zxCurrentPlayer := g.CurrentPlayer - 1
+    hand := g.Hand(int(zxCurrentPlayer))
 
-    if zxCurrentPlayer != g.cardPositions[card.Order()] - cardInHand1 {
-        return g, errors.New(msgNotHeld)
+    if cardNo >= len(hand) {
+        return g, errors.New("Not enough cards in hand.")
     }
 
-    // play on table in slot for player
-    g.cardPositions[card.Order()] = cardOnTableForPlayer1 + zxCurrentPlayer
+    card := hand[cardNo]
 
-    // next player in circle (1-indexed)
+    // play on table in slot for player
+    g.cardPositions[cardToInt(card)] = cardOnTableForPlayer1 + zxCurrentPlayer
+
+    // next player in circle (0-indexed)
     zxNextPlayer := (zxCurrentPlayer + 1) % 4
 
     for i := 0; i < 52; i++ {
@@ -40,9 +41,9 @@ func (g Game) Play(card Card) (Game, error) {
 func (g Game) collectBook() Game {
     var cards [4]Card
 
-    for i := uint8(0); i < 52; i++ {
+    for i := 0; i < 52; i++ {
         if g.cardPositions[i] >= cardOnTableForPlayer1 && g.cardPositions[i] <= cardOnTableForPlayer4 {
-            cards[g.cardPositions[i] - cardOnTableForPlayer1] = card{}.InOrder(i)
+            cards[g.cardPositions[i] - cardOnTableForPlayer1] = intToCard(i)
             g.cardPositions[i] = cardInBook
         }
     }
@@ -56,8 +57,13 @@ func (g Game) collectBook() Game {
     // add book
     g.Books[zxWinner]++
 
+    // check if all cards have been played
+    if g.IsOver() {
+        g.CurrentPlayer = 0
+        return g
+    }
+
     // one-index
     g.CurrentPlayer = zxWinner + 1
-
     return g
 }

@@ -1,55 +1,33 @@
 package superspades
 
-import "github.com/jteeuwen/deck"
+import (
+    "strconv"
+    //"fmt"
+)
 
-// Utility functions for cards. You can define your own card datatype.
-//
-// Beats() is non-exclusive -- it's possible that card1.Beats(card2) could
-// be false, and card2.Beats(card1) could also be false. In this case, it
-// would depend on who threw what first, which the cards themselves don't
-// know. This is also the case if you compare two identical cards. Two
-// cards will never return true compared against each other, though.
-//
-// Order() is an integer value, 0 through 51, unique for that card.
-type Card interface {
-    SameSuit(Card) bool
-    Beats(Card) bool
-    IsSpades() bool
-    Order() uint8
-    InOrder(uint8) Card
-
-    // private methods to implement the above
-    suit() uint8
-    value() uint8
+// A simple representation of a single card. The unicode symbol for the
+// suit (♥, ♦, ♣, ♠), and a string containing the number or letter value
+// (2-10, J, Q, K, A)
+type Card struct {
+    Suit string
+    Value string
 }
 
-type card struct {
-    card deck.Card
+// Card value which represents no card.
+var NilCard Card = Card{}
+
+func sameSuit(card1 int, card2 int) bool {
+    return (card1 / 13) == (card2 / 13)
 }
 
-func (card card) suit() uint8 {
-    return uint8(card.card.Suit())
-}
+func beats(card1 int, card2 int) bool {
+    if sameSuit(card1,card2) {
+        return (card1 % 13) > (card2 % 13)
 
-func (card card) value() uint8 {
-    // deck.Card.Value() makes Ace into a 0, 2 into 1, etc...
-    // We want value to be in order of what beats what
-    return (card.card.Value() + 12) % 13
-}
-
-
-func (card1 card) SameSuit(card2 Card) bool {
-    return card1.suit() == card2.suit()
-}
-
-func (card1 card) Beats(card2 Card) bool {
-    if card1.SameSuit(card2) {
-        return card1.value() > card2.value()
-
-    } else if card1.IsSpades() {
+    } else if isSpades(card1) {
         return true
 
-    } else if card2.IsSpades() {
+    } else if isSpades(card2) {
         return false
     }
 
@@ -57,15 +35,69 @@ func (card1 card) Beats(card2 Card) bool {
 }
 
 // True if the card is a spade.
-func (card card) IsSpades() bool {
-    return card.suit() == uint8(deck.Spades)
+func isSpades(card int) bool {
+    return card / 13 == 3
 }
 
-func (card card) Order() uint8 {
-    return (card.suit() * 13) + card.value()
+func cardToInt(card Card) int {
+    suitNo := 0
+    switch card.Suit {
+    case "♦":
+        suitNo = 1
+    case "♣":
+        suitNo = 2
+    case "♠":
+        suitNo = 3
+    }
+
+    valueNo := 0
+    switch card.Value {
+    case "3", "4", "5", "6", "7", "8", "9", "10":
+        i, _ := strconv.Atoi(card.Value)
+        valueNo = i - 2
+    case "J":
+        valueNo = 9
+    case "Q":
+        valueNo = 10
+    case "K":
+        valueNo = 11
+    case "A":
+        valueNo = 12
+    }
+
+    return (suitNo * 13) + valueNo
 }
 
-func (c card) InOrder(order uint8) Card {
-    return card{deck.Card(uint8((order / 13) << 4) | ((order + 1) % 13))}
+func intToCard(order int) Card {
+    suitNo := order / 13
+    valueNo:= order % 13
+
+    suit := ""
+    switch suitNo {
+    case 0:
+        suit = "♥"
+    case 1:
+        suit = "♦"
+    case 2:
+        suit = "♣"
+    case 3:
+        suit = "♠"
+    }
+
+    value := ""
+    switch {
+    case valueNo >= 0 && valueNo <= 8:
+        value = strconv.Itoa(int(valueNo) + 2)
+    case valueNo == 9:
+        value = "J"
+    case valueNo == 10:
+        value = "Q"
+    case valueNo == 11:
+        value = "K"
+    case valueNo == 12:
+        value = "A"
+    }
+
+    return Card{suit, value}
 }
 

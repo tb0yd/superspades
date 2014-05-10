@@ -2,40 +2,37 @@ package superspades
 
 import (
    // "fmt"
-    "github.com/jteeuwen/deck"
     "testing"
 )
 
 func TestAceOfSpades(t *testing.T) {
-    var c Card
+    //the highest value card
+    aceOfSpadesNo := 51
+    aceOfSpades   :=  Card{"♠", "A"}
 
-    c = card{deck.NewCard(deck.Spades, 0)}
-
-    if !c.SameSuit(card{deck.NewCard(deck.Spades, 0)}) {
+    if !sameSuit(aceOfSpadesNo, 51) {
         t.Errorf("wasn't same suit")
     }
 
-    if !c.IsSpades() {
+    if !isSpades(aceOfSpadesNo) {
         t.Errorf("wasn't spades")
     }
 
-    if (card{}).InOrder(c.Order()) != c {
-        t.Errorf("order didn't return c.")
+    if intToCard(aceOfSpadesNo) != aceOfSpades {
+        t.Errorf("cardToInt didn't return c.")
     }
 
-    for i := 0; i < 4; i++ {
-        for j := 0; j < 13; j++ {
-            if i != 3 && j != 0 {
-                c2 := deck.NewCard(deck.Suit(i), uint8(j))
-
-                if c.Order() == (card{c2}).Order() {
-                    t.Errorf("order wasn't unique")
-                }
-
-                if !c.Beats(card{c2}) {
-                    t.Errorf("didn't beat %s", c2.String())
-                }
-            }
+    for i := 0; i < 51; i++ {
+        if cardToInt(aceOfSpades) == cardToInt(intToCard(i)) {
+            t.Errorf("cardToInt wasn't unique")
         }
+
+        if !beats(aceOfSpadesNo, i) {
+            t.Errorf("didn't beat %s", intToCard(i))
+        }
+    }
+
+    if aceOfSpades.Suit != "♠" || aceOfSpades.Value != "A" {
+        t.Errorf("aceOfSpades was %s %s\n", aceOfSpades.Suit, aceOfSpades.Value)
     }
 }
