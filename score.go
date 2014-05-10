@@ -13,7 +13,7 @@ type Score struct {
 // that team. You must pass in the individual bids and numbers of books
 // for both players on the team. It doesn't matter what order the two
 // players are added in.
-func (s Score) Add(got1 int, bid1 int, got2 int, bid2 int) Score {
+func (s Score) Add(got1 uint8, bid1 uint8, got2 uint8, bid2 uint8) Score {
     bagBuster := func() {
         if s.Bags >= 10 {
             s.Books -= 100
@@ -41,10 +41,10 @@ func (s Score) Add(got1 int, bid1 int, got2 int, bid2 int) Score {
 
 
     if (got1 + got2) >= (bid1 + bid2) {
-        s.Bags = s.Bags + ((got1 + got2) - (bid1 + bid2))
-        s.Books = s.Books + ((bid1 + bid2) * 10)
+        s.Bags = s.Bags + int((got1 + got2) - (bid1 + bid2))
+        s.Books = s.Books + int((bid1 + bid2) * 10)
     } else {
-        s.Books = s.Books - ((bid1 + bid2) * 10)
+        s.Books = s.Books - int((bid1 + bid2) * 10)
     }
 
     bagBuster()

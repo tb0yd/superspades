@@ -5,19 +5,19 @@ import (
     //"fmt"
 )
 
-// Play the card in the current player's hand indexed by cardNo.
-// If the current player doesn't hold
-// that many cards, an error is thrown.
+// Play the card in the current player's PlayableCards(), indexed by cardNo.
+// If the current player doesn't have
+// that many cards playable, an error is thrown.
 func (g Game) Play(cardNo int) (Game, error) {
     // zero-index
     zxCurrentPlayer := g.CurrentPlayer - 1
-    hand := g.Hand(int(zxCurrentPlayer))
+    playable := g.PlayableCards()
 
-    if cardNo >= len(hand) {
-        return g, errors.New("Not enough cards in hand.")
+    if cardNo >= len(playable) {
+        return g, errors.New("Not enough playable cards.")
     }
 
-    card := hand[cardNo]
+    card := playable[cardNo]
 
     // play on table in slot for player
     g.cardPositions[cardToInt(card)] = cardOnTableForPlayer1 + zxCurrentPlayer
@@ -38,6 +38,68 @@ func (g Game) Play(cardNo int) (Game, error) {
     return g, nil
 }
 
+// Returns a slice of cards in the current player's hand. Only
+// cards which the player is allowed to play will appear.
+func (g Game) PlayableCards() []Card {
+    var cardsArray [13]Card
+    i := 0
+    hand := g.Hand(g.CurrentPlayer-1)
+    handInts := make([]int, len(hand))
+
+    for j, card := range hand {
+        handInts[j] = cardToInt(card)
+    }
+
+    for _, card := range hand {
+        if canPlayMove(cardToInt(card), handInts, g.spadesBroken(), g.leading(), g.lastSuit()) {
+            cardsArray[i] = card
+            i++
+        }
+    }
+
+    return cardsArray[0:i]
+}
+
+func (g Game) spadesBroken() bool {
+    for i := 39; i < 52; i++ {
+        if g.cardPositions[i] > cardInHand4 {
+            return true
+        }
+    }
+
+    return false
+}
+
+func (g Game) leading() bool {
+    for i := 0; i < 52; i++ {
+        if g.cardPositions[i] >= cardOnTableForPlayer1 && g.cardPositions[i] <= cardOnTableForPlayer4 {
+            return false
+        }
+    }
+
+    return true
+}
+
+func (g Game) lastSuit() int {
+    var oxOnTable [4]int
+
+    for i := 0; i < 52; i++ {
+        if g.cardPositions[i] >= cardOnTableForPlayer1 && g.cardPositions[i] <= cardOnTableForPlayer4 {
+            oxOnTable[g.cardPositions[i] - cardOnTableForPlayer1] = i
+        }
+    }
+
+    for i,j := (g.CurrentPlayer+1) % 4,0; j < 4; i,j = (i+1) % 4, j + 1 {
+        zxPrevPlayer := (i+3) % 4
+
+        if oxOnTable[zxPrevPlayer] == 0 && oxOnTable[i] != 0 {
+            return (oxOnTable[i] - 1) / 13
+        }
+    }
+
+    return 4
+}
+
 func (g Game) collectBook() Game {
     var cards [4]Card
 
@@ -51,8 +113,11 @@ func (g Game) collectBook() Game {
     // zero-index
     zxCurrentPlayer := g.CurrentPlayer - 1
 
-    // CurrentPlayer should be the leading player because it made a full circle
-    zxWinner := winningCardNum(cards, zxCurrentPlayer)
+    // next player in circle (0-indexed)
+    zxNextPlayer := (zxCurrentPlayer + 1) % 4
+
+    // zxNextPlayer should also be the leading player because it made a full circle
+    zxWinner := winningCardNum(cards, zxNextPlayer)
 
     // add book
     g.Books[zxWinner]++
