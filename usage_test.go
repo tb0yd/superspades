@@ -119,6 +119,68 @@ func TestUsage(t *testing.T) {
 
 
     if s1.ToInt() != -117 || s2.ToInt() != 300 {
-        t.Errorf("expected -54 to 140, was %d to %d\n", s1.ToInt(), s2.ToInt())
+        t.Errorf("expected -117 to 300, was %d to %d\n", s1.ToInt(), s2.ToInt())
+    }
+}
+
+func TestDefaultGameUsage(t *testing.T) {
+    rand.Seed(124)
+    Deal()
+    DefaultGame.CurrentPlayer = 2
+    var err error
+
+    s1 := Score{}
+    s2 := Score{}
+
+    playMove := func( m int) {
+        err = Play(m)
+        if err != nil {
+            t.Errorf("%s\n", err.Error())
+        }
+    }
+
+    playAllMoves := func(moves []int) {
+        for _, move := range moves {
+            playMove(move)
+        }
+    }
+
+    err = Bid(14)
+    if err != nil {
+        t.Errorf("%s\n", err.Error())
+    }
+
+    err = Bid(4)
+    if err != nil {
+        t.Errorf("%s\n", err.Error())
+    }
+
+    err = Bid(6)
+    if err != nil {
+        t.Errorf("%s\n", err.Error())
+    }
+    DefaultGame.CurrentPlayer = 2
+
+    playAllMoves([]int{
+        4,4,4,0,
+        0,3,3,0,
+        3,3,0,3,
+        6,0,2,5,
+        5,0,1,4,
+        1,3,2,2,
+        6,3,0,2,
+        4,2,2,5,
+        4,1,4,0,
+        3,2,1,1,
+        2,0,2,2,
+        1,1,1,0,
+        0,0,0,0,
+    })
+
+    s1 = s1.Add(DefaultGame.Books[0], DefaultGame.Bids[0], DefaultGame.Books[2], DefaultGame.Bids[2])
+    s2 = s2.Add(DefaultGame.Books[1], DefaultGame.Bids[1], DefaultGame.Books[3], DefaultGame.Bids[3])
+
+    if s1.ToInt() != -63 || s2.ToInt() != 160 {
+        t.Errorf("expected -63 to 160, was %d to %d\n", s1.ToInt(), s2.ToInt())
     }
 }
