@@ -89,11 +89,13 @@ func (g Game) lastSuit() int {
 
     for i := 0; i < 52; i++ {
         if g.cardPositions[i] >= cardOnTableForPlayer1 && g.cardPositions[i] <= cardOnTableForPlayer4 {
-            oxOnTable[g.cardPositions[i] - cardOnTableForPlayer1] = i
+            oxOnTable[g.cardPositions[i] - cardOnTableForPlayer1] = i+1
         }
     }
 
-    for i,j := (g.CurrentPlayer+1) % 4,0; j < 4; i,j = (i+1) % 4, j + 1 {
+    zxCurrentPlayer := g.CurrentPlayer - 1
+
+    for i,j := (zxCurrentPlayer+1) % 4,0; j < 3; i,j = (i+1) % 4, j + 1 {
         zxPrevPlayer := (i+3) % 4
 
         if oxOnTable[zxPrevPlayer] == 0 && oxOnTable[i] != 0 {

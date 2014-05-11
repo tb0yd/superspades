@@ -6,6 +6,7 @@ import (
 )
 
 const msgBadBid = "Cannot bid %d."
+const msgExactly1 = "Exactly one person on the team must bid nil."
 
 // Make a bid. It is assumed that the one bidding
 // is the current player. If the bid is out of range (1-14),
@@ -19,6 +20,12 @@ func (g Game) Bid(amt uint8) (Game, error) {
     }
 
     zxPartner := (zxCurrentPlayer + 2) % 4
+
+    if g.Bids[zxPartner] != 0 {
+        if (amt == 14 && g.Bids[zxPartner] == 14) || (amt != 14 && g.Bids[zxPartner] != 14) {
+            return g, errors.New(msgExactly1)
+        }
+    }
 
     if amt != 14 {
         g.Bids[zxPartner] = 14
