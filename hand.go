@@ -1,6 +1,22 @@
 package superspades
 
 // Returns a slice of Cards representing the cards in player n's hand.
+func (g Game) intHand(n uint8) []int {
+    var intArray [13]int
+
+    c := 0
+
+    for i, pos := range g.cardPositions {
+        if pos == cardInHand1 + n {
+            intArray[c] = i
+            c++
+        }
+    }
+
+    return intArray[0:c]
+}
+
+// Returns a slice of Cards representing the cards in player n's hand.
 func (g Game) Hand(n uint8) []Card {
     var cardArray [13]Card
 

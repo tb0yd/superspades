@@ -11,16 +11,16 @@ import (
 func (g Game) Play(cardNo int) (Game, error) {
     // zero-index
     zxCurrentPlayer := g.CurrentPlayer - 1
-    playable := g.PlayableCards()
+    playable := g.playableCardInts()
 
     if cardNo >= len(playable) {
         return g, errors.New("Not enough playable cards.")
     }
 
-    card := playable[cardNo]
+    cardInt := playable[cardNo]
 
     // play on table in slot for player
-    g.cardPositions[cardToInt(card)] = cardOnTableForPlayer1 + zxCurrentPlayer
+    g.cardPositions[cardInt] = cardOnTableForPlayer1 + zxCurrentPlayer
 
     // next player in circle (0-indexed)
     zxNextPlayer := (zxCurrentPlayer + 1) % 4
@@ -43,16 +43,16 @@ func (g Game) Play(cardNo int) (Game, error) {
 func (g Game) PlayableCards() []Card {
     var cardsArray [13]Card
     i := 0
-    hand := g.Hand(g.CurrentPlayer-1)
+    hand := g.intHand(g.CurrentPlayer-1)
     handInts := make([]int, len(hand))
 
-    for j, card := range hand {
-        handInts[j] = cardToInt(card)
+    for j, handInt := range hand {
+        handInts[j] = handInt
     }
 
-    for _, card := range hand {
-        if canPlayMove(cardToInt(card), handInts, g.spadesBroken(), g.leading(), g.lastSuit()) {
-            cardsArray[i] = card
+    for _, handInt := range hand {
+        if canPlayMove(handInt, handInts, g.spadesBroken(), g.leading(), g.lastSuit()) {
+            cardsArray[i] = intToCard(handInt)
             i++
         }
     }
@@ -60,12 +60,32 @@ func (g Game) PlayableCards() []Card {
     return cardsArray[0:i]
 }
 
+func (g Game) playableCardInts() []int {
+    var intArray [13]int
+    i := 0
+    hand := g.intHand(g.CurrentPlayer-1)
+    handInts := make([]int, len(hand))
+
+    for j, handInt := range hand {
+        handInts[j] = handInt
+    }
+
+    for _, handInt := range hand {
+        if canPlayMove(handInt, handInts, g.spadesBroken(), g.leading(), g.lastSuit()) {
+            intArray[i] = handInt
+            i++
+        }
+    }
+
+    return intArray[0:i]
+}
+
 func (g Game) collectBook() Game {
-    var cards [4]Card
+    var cards [4]int
 
     for i := 0; i < 52; i++ {
         if g.cardPositions[i] >= cardOnTableForPlayer1 && g.cardPositions[i] <= cardOnTableForPlayer4 {
-            cards[g.cardPositions[i] - cardOnTableForPlayer1] = intToCard(i)
+            cards[g.cardPositions[i] - cardOnTableForPlayer1] = i
             g.cardPositions[i] = cardInBook
         }
     }

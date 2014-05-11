@@ -39,35 +39,6 @@ func isSpades(card int) bool {
     return card / 13 == 3
 }
 
-func cardToInt(card Card) int {
-    suitNo := 0
-    switch card.Suit {
-    case "♦":
-        suitNo = 1
-    case "♣":
-        suitNo = 2
-    case "♠":
-        suitNo = 3
-    }
-
-    valueNo := 0
-    switch card.Value {
-    case "3", "4", "5", "6", "7", "8", "9", "10":
-        i, _ := strconv.Atoi(card.Value)
-        valueNo = i - 2
-    case "J":
-        valueNo = 9
-    case "Q":
-        valueNo = 10
-    case "K":
-        valueNo = 11
-    case "A":
-        valueNo = 12
-    }
-
-    return (suitNo * 13) + valueNo
-}
-
 func intToCard(order int) Card {
     suitNo := order / 13
     valueNo:= order % 13

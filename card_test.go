@@ -23,7 +23,7 @@ func TestAceOfSpades(t *testing.T) {
     }
 
     for i := 0; i < 51; i++ {
-        if cardToInt(aceOfSpades) == cardToInt(intToCard(i)) {
+        if aceOfSpades == intToCard(i) {
             t.Errorf("cardToInt wasn't unique")
         }
 
