@@ -48,6 +48,12 @@ func PlayableCards() []Card {
     return DefaultGame.PlayableCards()
 }
 
+// Set current player on default game
+func SetCurrentPlayer(n int) {
+    DefaultGame.CurrentPlayer = uint8(n)
+    return
+}
+
 // Deal cards in default game to all 4 players evenly. Random number
 // generator is automatically seeded.
 func ShuffleAndDeal() {

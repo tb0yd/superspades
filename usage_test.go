@@ -126,7 +126,7 @@ func TestUsage(t *testing.T) {
 func TestDefaultGameUsage(t *testing.T) {
     rand.Seed(124)
     Deal()
-    DefaultGame.CurrentPlayer = 2
+    SetCurrentPlayer(2)
     var err error
 
     s1 := Score{}
@@ -159,7 +159,7 @@ func TestDefaultGameUsage(t *testing.T) {
     if err != nil {
         t.Errorf("%s\n", err.Error())
     }
-    DefaultGame.CurrentPlayer = 2
+    SetCurrentPlayer(2)
 
     playAllMoves([]int{
         4,4,4,0,
