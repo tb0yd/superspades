@@ -48,6 +48,12 @@ func PlayableCards() []Card {
     return DefaultGame.PlayableCards()
 }
 
+// Reset default game to new game.
+func Reset() {
+    DefaultGame = &Game{}
+    return
+}
+
 // Set current player on default game
 func SetCurrentPlayer(n int) {
     DefaultGame.CurrentPlayer = uint8(n)

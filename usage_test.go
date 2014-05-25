@@ -186,17 +186,17 @@ func TestDefaultGameUsage(t *testing.T) {
 }
 
 func TestSimplestUsage(t *testing.T) {
-    DefaultGame = &Game{}
+    Reset()
     ShuffleAndDeal()
 
     // must set CurrentPlayer before bidding
-    DefaultGame.CurrentPlayer = 1
+    SetCurrentPlayer(1)
 
     Bid(4)
     Bid(4) // other 2 players automatically will bid nil
 
     // must set CurrentPlayer before playing
-    DefaultGame.CurrentPlayer = 1
+    SetCurrentPlayer(1)
 
     // play first playable card in hand for whole game
     for i := 0; i < 52; i++ {
@@ -204,6 +204,5 @@ func TestSimplestUsage(t *testing.T) {
     }
 
     // get scores
-    Score{}.Add(DefaultGame.Books[0], DefaultGame.Bids[0], DefaultGame.Books[2], DefaultGame.Bids[2])
-    Score{}.Add(DefaultGame.Books[1], DefaultGame.Bids[1], DefaultGame.Books[3], DefaultGame.Bids[3])
+    Scores()
 }

@@ -16,7 +16,7 @@
 //  )
 //
 //  func main() {
-//      ss.DefaultGame = &ss.Game{}
+//      ss.Reset()
 //      ss.ShuffleAndDeal()
 //
 //      ss.SetCurrentPlayer(1) // must set CurrentPlayer before bidding
