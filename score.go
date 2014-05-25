@@ -9,6 +9,19 @@ type Score struct {
     Bags int
 }
 
+// Return the scores of a game for teams 1 and 2, respectively. Returns 2
+// zeroed scores if the game isn't over yet.
+func (g Game) Scores() (s1 Score, s2 Score) {
+    if !g.IsOver() {
+        return
+    }
+
+    s1 = Score{}.Add(g.Books[0], g.Bids[0], g.Books[2], g.Bids[2])
+    s2 = Score{}.Add(g.Books[1], g.Bids[1], g.Books[3], g.Bids[3])
+
+    return
+}
+
 // Add the result of a game for a single team to the overall score of
 // that team. You must pass in the individual bids and numbers of books
 // for both players on the team. It doesn't matter what order the two

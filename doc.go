@@ -8,21 +8,29 @@
 // games at once, or you can manage a single game at a time.
 //
 // To run a simple game:
-//     DefaultGame = &Game{}
-//     ShuffleAndDeal()
+//  package main
 //
-//     DefaultGame.CurrentPlayer = 1 // must set CurrentPlayer before bidding
+//  import (
+//      ss "github.com/tb0yd/superspades"
+//      "fmt"
+//  )
 //
-//     Bid(4)
-//     Bid(4) // other 2 players automatically will bid nil
+//  func main() {
+//      ss.DefaultGame = &ss.Game{}
+//      ss.ShuffleAndDeal()
 //
-//     DefaultGame.CurrentPlayer = 1 // must set CurrentPlayer before playing
+//      ss.SetCurrentPlayer(1) // must set CurrentPlayer before bidding
 //
-//     // play first playable card in each player's hand for whole game
-//     for i := 0; i < 52; i++ { Play(0) }
+//      ss.Bid(4)
+//      ss.Bid(4) // other 2 players automatically will bid nil
 //
-//     s1 := Score{}.Add(DefaultGame.Books[0], DefaultGame.Bids[0], DefaultGame.Books[2], DefaultGame.Bids[2])
-//     s2 := Score{}.Add(DefaultGame.Books[1], DefaultGame.Bids[1], DefaultGame.Books[3], DefaultGame.Bids[3])
+//      ss.SetCurrentPlayer(1) // must set CurrentPlayer before playing
 //
-//     fmt.Printf("score: %d to %d\n", s1.ToInt(), s2.ToInt())
+//      // play first playable card in each player's hand for whole game
+//      for i := 0; i < 52; i++ { ss.Play(0) }
+//
+//      s1, s2 := ss.Scores()
+//
+//      fmt.Printf("score: %d to %d\n", s1.ToInt(), s2.ToInt())
+//  }
 package superspades

@@ -54,6 +54,19 @@ func SetCurrentPlayer(n int) {
     return
 }
 
+// Return the scores of the default game for teams 1 and 2, respectively. Returns
+// zeroed scores if the game isn't over yet.
+func Scores() (s1 Score, s2 Score) {
+    if !DefaultGame.IsOver() {
+        return
+    }
+
+    s1 = Score{}.Add(DefaultGame.Books[0], DefaultGame.Bids[0], DefaultGame.Books[2], DefaultGame.Bids[2])
+    s2 = Score{}.Add(DefaultGame.Books[1], DefaultGame.Bids[1], DefaultGame.Books[3], DefaultGame.Bids[3])
+
+    return
+}
+
 // Deal cards in default game to all 4 players evenly. Random number
 // generator is automatically seeded.
 func ShuffleAndDeal() {
